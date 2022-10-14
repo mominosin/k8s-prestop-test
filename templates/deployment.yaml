@@ -20,6 +20,8 @@ spec:
         app: {{ template "prestop-test.name" . }}
         release: {{ .Release.Name }}
     spec:
+      terminationGracePeriodSeconds: 100
+      shareProcessNamespace: false
       containers:
         - name: {{ .Chart.Name }}
           image: ealen/echo-server
@@ -61,14 +63,16 @@ spec:
             - name: config-volume
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+            - name: config-volume
+              mountPath: /prestop.sh
+              subPath: prestop-nginx.sh
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           lifecycle:
             preStop:
               exec:
                 command:
                   - sh
-                  - -c
-                  - sleep 1 && nginx -s quit && sleep 10
+                  - /prestop.sh
           ports:
             - name: http
               containerPort: 80
@@ -99,3 +103,4 @@ spec:
         - name: config-volume
           configMap:
             name: config-volume
+            defaultMode: 0777

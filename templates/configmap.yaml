@@ -7,7 +7,7 @@ data:
     daemon off;
     user  nginx;
     worker_processes  1;
-    error_log /var/log/nginx/error.log warn;
+    error_log /var/log/nginx/error.log notice;
     events {
         worker_connections  1024;
     }
@@ -26,3 +26,8 @@ data:
         }
     }
 
+  prestop-nginx.sh: |-
+    sleep 10
+    nginx -s quit
+    sleep 55
+    
