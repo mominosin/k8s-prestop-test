@@ -28,6 +28,3 @@ data:
 
   prestop-nginx.sh: |-
     sleep 10
-    nginx -s quit
-    sleep 55
-    
